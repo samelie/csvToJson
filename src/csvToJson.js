@@ -14,7 +14,7 @@ class CsvToJson {
         return this;
     }
 
-    fieldDelimiter(delimieter){
+    fieldDelimiter(delimieter) {
         this.delimiter = delimieter;
         return this;
     }
@@ -43,7 +43,7 @@ class CsvToJson {
 
         let jsonResult = [];
         for (let i = 1; i < lines.length; i++) {
-            let currentLine = lines[i].split(fieldDelimiter);
+            let currentLine = this.getCurrentLine(headers, lines[i], fieldDelimiter, i);
             if (stringUtils.hasContent(currentLine)) {
                 jsonResult.push(this.buildJsonResult(headers, currentLine));
             }
@@ -51,8 +51,22 @@ class CsvToJson {
         return jsonResult;
     }
 
-    getFieldDelimiter(){
-        if(this.delimiter){
+    getCurrentLine(headers, line, fieldDelimiter, index) {
+        let currentLine = line.split(fieldDelimiter);
+        if (headers.length === currentLine.length) {
+            return currentLine;
+        }
+        else {
+            var errorMessage = 'The header fields [' + headers.lenght + '] numbers ';
+            errorMessage += 'are not the same then the current line fileds [' + currentLine.length + '] number!!!\n';
+            errorMessage += 'The error occurs on the line: ' + index + '!!!\n';
+            errorMessage += '***Tips***: checks that the defined filed delimiter [' + fieldDelimiter + '] is correct!!!';
+            throw new Error(errorMessage);
+        }
+    }
+
+    getFieldDelimiter() {
+        if (this.delimiter) {
             return this.delimiter;
         }
         return defaultFieldDelimiter;
