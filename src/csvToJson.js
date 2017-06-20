@@ -44,7 +44,7 @@ class CsvToJson {
         let jsonResult = [];
         for (let i = 1; i < lines.length; i++) {
             let currentLine = this.getCurrentLine(headers, lines[i], fieldDelimiter, i);
-            if (stringUtils.hasContent(currentLine)) {
+            if (currentLine) {
                 jsonResult.push(this.buildJsonResult(headers, currentLine));
             }
         }
@@ -53,16 +53,27 @@ class CsvToJson {
 
     getCurrentLine(headers, line, fieldDelimiter, index) {
         let currentLine = line.split(fieldDelimiter);
+        let hasContent = stringUtils.hasContent(currentLine);
+        if (!hasContent) {
+            return null;
+        }
         if (headers.length === currentLine.length) {
             return currentLine;
         }
         else {
-            var errorMessage = 'The header fields [' + headers.lenght + '] numbers ';
-            errorMessage += 'are not the same then the current line fileds [' + currentLine.length + '] number!!!\n';
-            errorMessage += 'The error occurs on the line: ' + index + '!!!\n';
-            errorMessage += '***Tips***: checks that the defined filed delimiter [' + fieldDelimiter + '] is correct!!!';
-            throw new Error(errorMessage);
+            this.getErrorMessage(headers, currentLine, index, fieldDelimiter);
         }
+    }
+
+    getErrorMessage(headers, currentLine, index, fieldDelimiter) {
+        var errorMessage = 'The header fields [' + headers.length + '] numbers ';
+        errorMessage += 'are not the same then the current line fileds [' + currentLine.length + '] number!!!\n';
+        errorMessage += 'The error occurs on the line ' + (index + 1) + '\n';
+        errorMessage += ' See the difference:\n';
+        errorMessage += ' HEADER: ' + headers + '\n';
+        errorMessage += ' LINE ' + (index + 1) + ': ' + currentLine + '\n';
+        errorMessage += '***Tips***: checks that the defined filed delimiter [' + fieldDelimiter + '] is correct!!!';
+        throw new Error(errorMessage);
     }
 
     getFieldDelimiter() {
