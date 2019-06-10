@@ -59,5 +59,5 @@ exports.jsonToCsv = function (inputFileName, outputFileName) {
 };
 
 exports.csvToJsonFromString = function (str) {
-    csvToJson.csvToJson(str);
+   return csvToJson.csvToJson(str);
 };
