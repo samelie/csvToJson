@@ -57,3 +57,7 @@ exports.getJsonFromCsv = function (inputFileName) {
 exports.jsonToCsv = function (inputFileName, outputFileName) {
     csvToJson.generateJsonFileFromCsv(inputFileName, outputFileName);
 };
+
+exports.csvToJsonFromString = function (str) {
+    csvToJson.csvToJson(str);
+};
